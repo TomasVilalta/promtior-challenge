@@ -1,0 +1,10 @@
+langserve
+langchain
+langchain-openai
+langchain-community
+dotenv
+fastapi
+uvicorn
+sse-starlette
+pypdf
+chromadb
