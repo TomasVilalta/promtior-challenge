@@ -76,6 +76,4 @@ jobs:
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'promtior-chatbot-challenge'
-          slot-name: 'Production'
-          
+          app-name: 'promtior-chatbot-challenge'          
