@@ -6,9 +6,6 @@ from pathlib import Path
 from typing import List
 from langchain.schema import Document
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 # I would probably make a factory for this? 
 # Or maybe a singleton for every loader type, this is fine for now
@@ -18,7 +15,6 @@ class PDFLoader:
         current_file = Path(__file__)
         project_root = current_file.parent.parent.parent
         self.data_path = os.path.join(project_root, data_path)
-        logger.info(f"PDF path: {self.data_path}")
 
 
     def validate(self) -> bool:

@@ -26,17 +26,9 @@ class URLLoader:
             raise ValueError("No URLs provided")
         loader = RecursiveUrlLoader(self.url, extractor=bs4_extractor)
         raw_documents = loader.load()
-
-        # Transform the documents to markdown
-        markdown_transformer = MarkdownifyTransformer()
-        markdown_documents = markdown_transformer.transform_documents(raw_documents)
-        
         # discard description from metadata
-        for doc in markdown_documents:
+        for doc in raw_documents:
             doc.metadata.pop("description", None)
-            
 
-
-        
-        return markdown_documents
+        return raw_documents
     

@@ -49,7 +49,7 @@ class ChromaDBManager:
             search_kwargs={
                 "k": CONFIG.VECTOR_STORE_K,
                 "fetch_k": CONFIG.VECTOR_STORE_K * 3,  # Fetch more candidates for diversity
-                "lambda_mult": 0.7,  # Balance between relevance and diversity (0.0-1.0)
+                "lambda_mult": 0.7, 
             }
         )
 

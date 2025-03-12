@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from src.utils.logger import logger
 
 load_dotenv()
 
@@ -22,8 +23,8 @@ class _Config:
     OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-large"
 
     # Text splitter config
-    TEXT_SPLITTER_CHUNK_SIZE: int = 800
-    TEXT_SPLITTER_CHUNK_OVERLAP: int = 80
+    TEXT_SPLITTER_CHUNK_SIZE: int = 1200
+    TEXT_SPLITTER_CHUNK_OVERLAP: int = 100
 
     # Vector store config - the number of results to return from the vector store retriever
     VECTOR_STORE_K: int = 5
@@ -31,6 +32,7 @@ class _Config:
     # Data config
     PDF_DATA_PATH: str = os.getenv("PDF_DATA_PATH", "data")
     CHROMA_DB_PATH: str = os.getenv("CHROMA_DB_PATH", "chroma_db")
+    URL_TO_LOAD: str = os.getenv("URL_TO_LOAD", "https://www.promtior.ai")
 
     #App config
     PORT: int = int(os.getenv("PORT", 8000))
