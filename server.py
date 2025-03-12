@@ -19,30 +19,33 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('uvicorn.error')
 
 # URLs to include in the retriever (can be configured as needed)
-urls = [
-    "https://www.promtior.ai/service"
-]
+urls ="https://www.promtior.ai"
 
 urlLoader= URLLoader(urls)
 pdfLoader = PDFLoader()
 
-# pdfDocuments = pdfLoader.load()
+pdfDocuments = pdfLoader.load()
 urlDocuments = urlLoader.load()
 
+logger.info(urlDocuments[0].page_content[:1000])
+
 # Split the documents into chunks
-processedDocuments = split_documents(urlDocuments)
+processedDocuments = split_documents(pdfDocuments + urlDocuments)
+
 
 # Create the vector store
 vectorStoreManager = ChromaDBManager()
 vectorStore = vectorStoreManager.create_vector_store(processedDocuments)
 retriever = vectorStoreManager.get_retriever_from_vector_store(vectorStore)
 
+
 # Create the prompt template with the correct input parameter name
 prompt = ChatPromptTemplate.from_template(
     """
-    You are a helpful assistant that can answer questions solely based on the following text:
-    {context}
-    Question: {input}
+    You are a helpful, friendly, and engaging assistant that can answer questions about the following text,
+    you are eager to get people excited about the topic and help them understand it better.
+    Context is: {context}
+    Questionis: {input}
     Answer:
     """
 )
@@ -64,29 +67,22 @@ rag_chain= (
 
 
 
+# Create the document chain
+document_chain = create_stuff_documents_chain(
+    model,
+    prompt
+)
 
 
-
-# # Create the document chain
-# document_chain = create_stuff_documents_chain(
-#     model,
-#     prompt
-# )
-
-# rag_chain=create_retrieval_chain(
-#     retriever,
-#     document_chain
-# )
-
-# rag_chain=(
-#     {"context": retriever, "input": RunnablePassthrough()}
-#     |
-#     prompt
-#     |
-#     model
-#     |
-#     StrOutputParser()
-# )
+rag_chain=(
+    {"context": retriever, "input": RunnablePassthrough()}
+    |
+    prompt
+    |
+    model
+    |
+    StrOutputParser()
+)
 
 # # Initialize the FastAPI app
 app = FastAPI(

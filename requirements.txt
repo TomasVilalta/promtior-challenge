@@ -8,3 +8,5 @@ uvicorn
 sse-starlette
 pypdf
 chromadb
+bs4
+lxml

@@ -44,4 +44,12 @@ class ChromaDBManager:
         Returns:
             Retriever: The retriever.
         """
-        return vector_store.as_retriever(kwargs={"k": CONFIG.VECTOR_STORE_K})
+        return vector_store.as_retriever(
+            search_type="mmr",  # Maximum Marginal Relevance
+            search_kwargs={
+                "k": CONFIG.VECTOR_STORE_K,
+                "fetch_k": CONFIG.VECTOR_STORE_K * 3,  # Fetch more candidates for diversity
+                "lambda_mult": 0.7,  # Balance between relevance and diversity (0.0-1.0)
+            }
+        )
+
