@@ -54,7 +54,6 @@ jobs:
     permissions:
       id-token: write #This is required for requesting the JWT
       contents: read #This is required for actions/checkout
-    timeout-minutes: 20 # Add timeout to prevent indefinite hanging
 
     steps:
       - name: Download artifact from build job
@@ -78,5 +77,3 @@ jobs:
         with:
           app-name: "promtior-chatbot-challenge"
           slot-name: "Production"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D9A5A9A0D9F04A9A9A9A9A9A9A9A9A9 }}
-          startup-command: "python server.py"
