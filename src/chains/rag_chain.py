@@ -3,6 +3,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from src.promptTemplates.rag_prompt import rag_prompt
+from src.config.config import CONFIG
 
 def create_rag_chain(retriever):
     """
@@ -14,16 +15,14 @@ def create_rag_chain(retriever):
     Returns:
         The RAG chain
     """
-    # Initialize the model
-    model = ChatOpenAI(model="gpt-4o-mini")
+
+    model = ChatOpenAI(model=CONFIG.OPENAI_MODEL_NAME)
     
-    # Create the document chain
     document_chain = create_stuff_documents_chain(
         model,
         rag_prompt
     )
     
-    # Create and return the RAG chain
     return (
         {"context": retriever, "input": RunnablePassthrough()}
         | document_chain
