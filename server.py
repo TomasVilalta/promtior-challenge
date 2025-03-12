@@ -19,9 +19,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('uvicorn.error')
 
 # URLs to include in the retriever (can be configured as needed)
-urls ="https://www.promtior.ai"
+# urls = ["https://www.promtior.ai", "https://www.promtior.ai/services", "https://www.promtior.ai/use-cases", "https://www.promtior.ai/contacto"]
+url = "https://www.promtior.ai"
 
-urlLoader= URLLoader(urls)
+urlLoader= URLLoader(url)
 pdfLoader = PDFLoader()
 
 pdfDocuments = pdfLoader.load()
@@ -44,6 +45,7 @@ prompt = ChatPromptTemplate.from_template(
     """
     You are a helpful, friendly, and engaging assistant that can answer questions about the following text,
     you are eager to get people excited about the topic and help them understand it better.
+    if the user asks for a topic that is not related to the context, mention that you are only able to answer questions about the context provided.
     Context is: {context}
     Questionis: {input}
     Answer:

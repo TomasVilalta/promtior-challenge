@@ -10,3 +10,4 @@ pypdf
 chromadb
 bs4
 lxml
+markdownify
