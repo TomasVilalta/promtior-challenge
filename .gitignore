@@ -1,5 +1,7 @@
 __pycache__
 .env
 .venv*
-./chroma_db
-./chroma_db/*
+
+# Ignore the chroma_db folder
+chroma_db
+chroma_db/*
