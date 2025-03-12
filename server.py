@@ -5,7 +5,6 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from src.config.config import CONFIG
 import logging
-from src.vectorstores.url_retriever import URLRetriever
 from src.loaders.URLLoader import URLLoader
 from src.loaders.PDFLoader import PDFLoader
 from src.vectorstores.chromadb import ChromaDBManager
@@ -33,7 +32,6 @@ logger.info(urlDocuments[0].page_content[:1000])
 # Split the documents into chunks
 processedDocuments = split_documents(pdfDocuments + urlDocuments)
 
-
 # Create the vector store
 vectorStoreManager = ChromaDBManager()
 vectorStore = vectorStoreManager.create_vector_store(processedDocuments)
@@ -53,6 +51,7 @@ prompt = ChatPromptTemplate.from_template(
 )
 
 model = ChatOpenAI(model="gpt-4o-mini")
+
 document_chain = create_stuff_documents_chain(
     model,
     prompt
@@ -64,9 +63,6 @@ rag_chain= (
     | model
     | StrOutputParser()
 )
-
-
-
 
 
 # Create the document chain
@@ -98,15 +94,6 @@ add_routes(
     app,
     rag_chain,
     path="/rag",
-)
-
-# Add routes for the joke endpoint
-md1 = ChatOpenAI(model="gpt-4o-mini")
-prt2 = ChatPromptTemplate.from_template("tell me a joke about {topic}")
-add_routes(
-    app,
-    prt2 | md1,
-    path="/joke",
 )
 
 if __name__ == "__main__":
