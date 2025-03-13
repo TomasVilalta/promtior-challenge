@@ -1,0 +1,15 @@
+__pycache__
+.env
+.venv*
+
+# Ignore the chroma_db folder
+chroma_db
+chroma_db/*
+
+# Ignore the .git folder
+.git
+.git/*
+
+# Ignore the .vscode folder
+.vscode
+.vscode/*
