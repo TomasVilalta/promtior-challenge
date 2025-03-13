@@ -1,37 +1,49 @@
-on: [push]
-name: Linux_Container_Workflow
+name: Build, Push, and Deploy Container
+
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      # checkout the repo
-      - name: "Checkout GitHub Action"
-        uses: actions/checkout@main
+      # Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: "Login via Azure CLI"
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: "Build and push image"
+      # Log in to Azure Container Registry
+      - name: Azure Docker Login
         uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.ACR_LOGIN_SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-      - run: |
-          docker build . -t ${{ secrets.ACR_LOGIN_SERVER }}/promtior-chatbot:${{ github.sha }}
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/promtior-chatbot:${{ github.sha }}
 
-      - name: "Deploy to Azure Container Instances"
-        uses: "azure/aci-deploy@v1"
+      # Build your Docker image and tag it with the commit SHA
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/prom-chat:${{ github.sha }} .
+
+      # Push the image to your Azure Container Registry
+      - name: Push Docker Image to ACR
+        run: |
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/prom-chat:${{ github.sha }}
+
+      # Log in to Azure using your service principal credentials
+      - name: Azure Login
+        uses: azure/login@v1
         with:
-          resource-group: ${{ secrets.RESOURCE_GROUP }}
-          dns-name-label: ${{ secrets.RESOURCE_GROUP }}${{ github.run_number }}
-          image: ${{ secrets.ACR_LOGIN_SERVER }}/promtior-chatbot:${{ github.sha }}
-          registry-login-server: ${{ secrets.ACR_LOGIN_SERVER }}
-          registry-username: ${{ secrets.ACR_USERNAME }}
-          registry-password: ${{ secrets.ACR_PASSWORD }}
-          name: aci-promtior-chatbot
-          location: "west us"
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy the container image to your Azure Web App
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: "promtiot-chatbot-app"
+          images: "${{ secrets.ACR_LOGIN_SERVER }}/prom-chat:${{ github.sha }}"
+          configuration-string: |
+            WEBSITES_PORT=8000
+            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
