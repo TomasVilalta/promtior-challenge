@@ -4,34 +4,34 @@ from src.loaders.PDFLoader import PDFLoader
 from src.vectorstores.chromadb import ChromaDBManager
 from src.processors.text_splitter import split_documents
 from src.utils.logger import logger
+from src.config.config import CONFIG
 
-def load_and_setup_retriever(url: str):
+def load_and_setup_retriever():
     """
-    Load data from URL and PDF sources, process it, and set up a retriever
-    
-    Args:
-        url: The URL to load data from
+    Load data from URL and PDF sources for the RAG chain
+    Store it to a vector store and return a retriever
         
     Returns:
         A retriever for the loaded data
     """
+
     # Initialize loaders
-    url_loader = URLLoader(url)
+    url_loader = URLLoader()
     pdf_loader = PDFLoader()
     
     # Load documents with basic error handling
     try:
-        pdf_documents = pdf_loader.load()
+        pdf_documents = pdf_loader.load(CONFIG.PDF_DATA_PATH)
         logger.info(f"Loaded {len(pdf_documents)} PDF documents")
     except Exception as e:
         logger.error(f"Error loading PDF documents: {str(e)}")
         pdf_documents = []  # Continue with empty list if PDF loading fails
         
     try:
-        url_documents = url_loader.load()
+        url_documents = url_loader.load(CONFIG.URL_TO_LOAD)
         logger.info(f"Loaded {len(url_documents)} URL documents")
     except Exception as e:
-        logger.error(f"Error loading URL documents from {url}: {str(e)}")
+        logger.error(f"Error loading URL documents from {CONFIG.URL_TO_LOAD}: {str(e)}")
         url_documents = []  # Continue with empty list if URL loading fails
         
     # make sure we have at least something to load

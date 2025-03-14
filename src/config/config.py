@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from src.utils.logger import logger
+from pydantic import BaseModel
 
 load_dotenv()
 
@@ -40,7 +40,6 @@ class _Config:
     APP_TITLE: str = os.getenv("APP_TITLE", "LangChain Server")
     APP_VERSION: str = os.getenv("APP_VERSION", "1.0")
     APP_DESCRIPTION: str = os.getenv("APP_DESCRIPTION", "A simple api server using Langchain's Runnable interfaces")
-
 
 
 CONFIG = _Config()

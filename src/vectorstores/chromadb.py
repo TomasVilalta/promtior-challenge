@@ -48,7 +48,6 @@ class ChromaDBManager:
             Retriever: The retriever.
         """
 
-        # multi query retriever
         retriever = vector_store.as_retriever(
             search_type="mmr",  # Maximum Marginal Relevance
             search_kwargs={
@@ -57,6 +56,7 @@ class ChromaDBManager:
                 "lambda_mult": 0.75, 
             }
         )
+        
         multi_query_retriever = MultiQueryRetriever.from_llm(
             retriever=retriever,
             llm=ChatOpenAI(model=CONFIG.OPENAI_MODEL_NAME, temperature=0),

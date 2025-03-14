@@ -12,7 +12,7 @@ from src.utils.logger import logger
 
 # There's definitely a better way to load stuff before the app starts
 try:
-    retriever = load_and_setup_retriever(CONFIG.URL_TO_LOAD)
+    retriever = load_and_setup_retriever()
     # Create the RAG chain
     rag_chain = create_rag_chain(retriever)
 except Exception as e:
