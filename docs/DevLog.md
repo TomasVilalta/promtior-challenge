@@ -17,6 +17,7 @@ I also made an effort to keep the different parts of the app clearly separated. 
 - Processors (for splitting documents and other transformations)
 - Vector stores (to manage the vector DBs)
 - Prompt templates and chains
+
 I think the structure is _okay_ for the size of this project, but I’d love to see how a large-scale, production-ready app is structured.
 
 #### Loading the documents
