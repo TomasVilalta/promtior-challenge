@@ -4,6 +4,9 @@ from langchain_core.documents import Document
 from langchain_community.vectorstores import Chroma
 from typing import List
 import os
+from langchain.retrievers.multi_query import MultiQueryRetriever
+from langchain_openai import ChatOpenAI
+
 
 # Im gonna just recreate the db each time and not worry about persisting the db between runs
 # If I were to persist the db and host it somewhere, I would make some functions to handle
@@ -44,12 +47,19 @@ class ChromaDBManager:
         Returns:
             Retriever: The retriever.
         """
-        return vector_store.as_retriever(
+
+        # multi query retriever
+        retriever = vector_store.as_retriever(
             search_type="mmr",  # Maximum Marginal Relevance
             search_kwargs={
                 "k": CONFIG.VECTOR_STORE_K,
                 "fetch_k": CONFIG.VECTOR_STORE_K * 3,  # Fetch more candidates for diversity
-                "lambda_mult": 0.7, 
+                "lambda_mult": 0.75, 
             }
         )
+        multi_query_retriever = MultiQueryRetriever.from_llm(
+            retriever=retriever,
+            llm=ChatOpenAI(model=CONFIG.OPENAI_MODEL_NAME, temperature=0),
+        )
+        return multi_query_retriever
 

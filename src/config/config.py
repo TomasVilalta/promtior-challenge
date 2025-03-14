@@ -27,7 +27,7 @@ class _Config:
     TEXT_SPLITTER_CHUNK_OVERLAP: int = 100
 
     # Vector store config - the number of results to return from the vector store retriever
-    VECTOR_STORE_K: int = 5
+    VECTOR_STORE_K: int = 3
 
     # Data config
     PDF_DATA_PATH: str = os.getenv("PDF_DATA_PATH", "data")
